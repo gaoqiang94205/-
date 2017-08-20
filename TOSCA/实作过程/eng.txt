@@ -1,0 +1,41 @@
+
+ |      import pxssh
+ |      import getpass
+ |      try:
+ |          s = pxssh.pxssh()
+ |          hostname = raw_input('hostname: ')
+ |          username = raw_input('username: ')
+ |          password = getpass.getpass('password: ')
+ |          s.login (hostname, username, password)
+ |          s.sendline ('uptime')  # run a command
+ |          s.prompt()             # match the prompt
+ |          print s.before         # print everything before the prompt.
+ |          s.sendline ('ls -l')
+ |          s.prompt()
+ |          print s.before
+ |          s.sendline ('df')
+ |          s.prompt()
+ |          print s.before
+ |          s.logout()
+ |      except pxssh.ExceptionPxssh, e:
+ |          print "pxssh failed on login."
+ |          print str(e)
+  
+auto_prompt_reset=True
+ssh.login('52.39.245.255','ec2-user',ssh_key='MyKey1.pem',auto_prompt_reset=False)
+''
+
+ sudo yum groupinstall -y "Web Server" "MySQL Database" "PHP Support"
+
+
+
+
+
+http://blog.csdn.net/u013676711/article/details/49466385
+
+
+Ô¶³ÌµÈÂ½MySQL£º
+ssh.sendline("mysql -uroot -proot -Dmysql -e'select user from user'")
+//sql="CREATE USER "+user+"@"+ip+" IDENTIFY BY '"+pwd+"'"
+
+ sql='mysql -uroot -p"'+pwd+'" -e"CREATE USER '+user+'@'+ip+" IDENTIFY BY "+pwd+'"'

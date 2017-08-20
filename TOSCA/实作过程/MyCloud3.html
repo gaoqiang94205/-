@@ -1,0 +1,454 @@
+﻿
+<html>
+<head>
+<style type="text/css">
+div#container{height:480px}
+div#header {background-color:#99bbbb;text-align:center;}
+div#menu {background-color:#ffff99;height:100%;width:20%;float:left;}
+div#content {background-color:#EEEEEE;height:100%;width:40%;float:left;}
+div#right {background-color:glue;height:100%;width:40%;float:left;}
+div#footer {background-color:#99bbbb;clear:both;text-align:center;}
+h1 {margin-bottom:0;}
+h2 {margin-bottom:0;font-size:18px;}
+ul {margin:0;}
+li {list-style:none;}
+
+
+.mask{position: absolute; 
+top: 0px; 
+left: 0px; 
+filter: alpha(opacity=50); 
+-moz-opacity:0.5; 
+opacity:0.5; 
+background-color: #ffffff; 
+z-index: 2; 
+display: none;} 
+/* 弹出基本资料div */ 
+div.sample_popup {height:auto; border: 1px solid #327eca; width: 300px; } 
+div.menu_form_header{ 
+//background: url('../images/baseInfo/titleBG.gif') repeat-x;
+background: url('photo\eg_cute.gif') repeat-x; 
+} 
+div.sample_popup div.menu_form_header 
+{ 
+border-bottom: 0px; 
+cursor: default; 
+width:100%; 
+height: 22px; 
+line-height: 22px; 
+vertical-align: middle; 
+text-decoration: none; 
+font-family: "Times New Roman", Serif; 
+font-weight: 800; 
+font-size: 13px; 
+color: #206040; 
+} 
+div.menu_form_body 
+{ 
+width:100%; 
+height:150px; 
+font-size:12px; 
+background-color:#f1f8fe; 
+} 
+div.sample_popup input.menu_form_exit 
+{ 
+float: right; 
+margin: 4px 5px 0px 0px; 
+cursor: pointer; 
+} 
+
+/*end: 弹出商品信息div */ 
+</style> 
+<script type="text/javascript"> 
+/************************************************** 
+* DivWindow.js 
+**************************************************/ 
+var DivWindow= function(popup/*最外层div id*/,popup_drag/*拖动div id*/,popup_exit/*退出按钮id*/ ,exitButton/*触发服务器端退出按钮id*/,varwidth,varheight,zindex){ 
+
+    this.popup =popup ;    //窗口名称 
+     
+    this.height =varheight ; //窗口高度，并没用来设置窗口高度宽度，用来定位在屏幕的位置 
+    this.width =varwidth ;    //窗口宽度 
+    this.popup_exit=popup_exit; 
+    this.exitButton=exitButton; 
+    this.zindex=zindex; 
+    this.init = function(){    //初始化窗口 
+         
+         
+        this.popupShow(); 
+        this.startDrag();    //设置拖动 
+         
+        this.setCommond();    //设置关闭 
+        DivWindow.ArrayW.push(document.getElementById(this.popup));    //存储窗口到数组 
+    };this.init(); 
+
+}; 
+//存储窗口到数组 
+DivWindow.ArrayW = new Array(); 
+//字符串连接类 
+DivWindow.StringBuild = function(){ 
+    this.arr = new Array(); 
+    this.push = function(str){ 
+        this.arr.push(str); 
+    }; 
+    this.toString = function(){ 
+        return this.arr.join(""); 
+    }; 
+}; 
+//拖动类 
+DivWindow.Drag = function(o ,oRoot){ 
+    var _self = this; 
+    //拖动对象 
+    this.obj = (typeof oRoot != "undefined") ?oRoot : o; 
+    this.relLeft = 0;    //记录横坐标 
+    this.relTop = 0;    //记录纵坐标 
+    o.onselectstart = function(){ 
+        return false; 
+    }; 
+    o.onmousedown = function(e){    //鼠标按下 
+        e = _self.fixE(e); 
+        _self.relLeft = e.clientX - _self.fixU(_self.obj.style.left); 
+        _self.relTop = e.clientY - _self.fixU(_self.obj.style.top); 
+        document.onmousemove = function(e){ 
+            _self.drag(e); 
+            //_self.obj.style.border = "1px dashed #000000"; 
+            //_self.obj.style.filter = "alpha(opacity=30)"; 
+            //_self.obj.style.opacity = "0.3"; 
+        }; 
+        document.onmouseup     = function(){ 
+            _self.end(); 
+            //_self.obj.style.border = "1px solid #cccccc"; 
+            //_self.obj.style.borderBottom = "2px solid #E0E0E0"; 
+            //_self.obj.style.borderRight = "2px solid #E0E0E0"; 
+            //_self.obj.style.filter = "alpha(opacity=100)"; 
+            //_self.obj.style.opacity = "1"; 
+        }; 
+    }; 
+    this.drag = function(e){    //拖动 
+        e = this.fixE(e); 
+        var l = e.clientX - this.relLeft; 
+        var t = e.clientY - this.relTop; 
+        if (t < 0) 
+        { 
+            t = 0;    //防止头部消失 
+        } 
+        this.obj.style.left = l +"px"; 
+        this.obj.style.top = t +"px";     
+    }; 
+    this.end = function(){    //结束拖动 
+        document.onmousemove = null; 
+        document.onmouseup = null; 
+    }; 
+    this.fixE = function(e){    //修复事件 
+        if (typeof e == "undefined") e = window.event; 
+        return e; 
+    }; 
+    this.fixU = function(u){    //处理px单位 
+        return parseInt(u.split("p")[0]); 
+    }; 
+}; 
+
+//窗口拖动 
+DivWindow.prototype.startDrag = function(){ 
+    var obj = document.getElementById(this.popup); 
+    new DivWindow.Drag(obj.childNodes[0] ,obj); 
+}; 
+
+//设定窗口优先级 
+DivWindow.prototype.setTop = function(){ 
+    document.getElementById(this.popup).onclick = 
+    document.getElementById(this.popup).onmousedown = 
+    function(){ 
+        for(var i=0;i<DivWindow.ArrayW.length;i++) 
+        { 
+            DivWindow.ArrayW[i].style.zIndex = 1; 
+        } 
+        this.style.zIndex = 100; 
+    };     
+}; 
+//显示 
+DivWindow.prototype.popupShow=function() 
+{ document.all.mask.style.display="block"; 
+document.all.mask.style.width=window.screen.width +20; 
+document.all.mask.style.height=window.screen.width +20; 
+var element = document.getElementById(this.popup); 
+element.style.position = "absolute"; 
+element.style.visibility = "visible"; 
+element.style.display = "block"; 
+element.style.width=this.width; 
+element.style.height='auto'; 
+element.style.left = (window.screen.width - this.width)/2+"px"; 
+//element.style.top =(window.screen.height-this.height-100)/2+"px"; 
+element.style.top =20+"px"; 
+element.style.zIndex=this.zindex; 
+} 
+//设置关闭 
+DivWindow.prototype.setCommond = function(){ 
+    var _self = this; 
+    //根对象 
+    var obj = document.getElementById(this.popup); 
+    var exit = document.getElementById(this.popup_exit); 
+    var triggServerEvent=document.getElementById(this.exitButton); 
+    //设置关闭 
+     exit.onclick = function(){ 
+         obj.style.display = "none"; 
+         obj.style.visibility = 'hidden'; 
+document.all.mask.style.display='none'//关闭遮罩层 
+//triggServerEvent.click();//触发服务器端退出事件 
+    var user=document.getElementById("user");
+    var dbname=document.getElementById("dbname");
+    var pwd=document.getElementById("pwd");
+    var dia=document.getElementById("dia0");
+    var str = user.value.concat("and");
+     var st1=str.concat(dbname.value);
+     var st2=st1.concat("and")
+     var st3=st2.concat(pwd.value);
+    dia.value=st3;
+   //alert(dia.value);
+     }; 
+}
+
+    var ty = 1;
+    var tc = 1;
+    var num=new Array(100,180,260,340);
+   // var num=new Array(100,180,260,340);
+    var isDrag = false; 
+    function isIE(){
+     if(navigator.userAgent.indexOf("MSIE")>0){return true;}
+     else{return false;}
+}
+function addListener(element,e,fn){
+  if(isIE()){element.attachEvent("on" + e,fn);}
+ else{element.addEventListener(e,fn,false);}
+}
+function stop(e){
+   var e = e || window.event;
+   var element = e.srcElement || e.target;
+   var x=parseInt(element.style.left);
+   var y=parseInt(element.style.top);
+    
+  //alert(!(((x-400)<50&(x-400)>-50)&((y-400)<50&(y-400)>-50)))
+   if(!((((x-400)<80&(x-400)>-80)&((y-200)<80&(y-200)>-80))||(((x-900)<80&(x-900)>-80)&((y-200)<80&(y-200)>-80)))){
+     	var info=document.getElementById("info");
+      info.value="";
+     
+     	if(element.className=="linux1"){
+       element.style.left="20px";
+       element.style.top="100px";
+      }
+// alert(element.className)     
+      if(element.className=="apache1"){
+       element.style.left="20px";
+       element.style.top="180px";
+      }
+      if(element.className=="ubuntu1"){
+       element.style.left="20px";
+       element.style.top="260px";
+      }
+      if(element.className=="mysql1"){
+       element.style.left="20px";
+       element.style.top="340px";
+      }
+         
+   }else{
+     if((x-400)<80&(x-400)>-80){
+       var nn= (ty-1)%4;   
+       element.style.left="300px";
+       element.style.top = num[nn]+"px";
+       ty+=1;
+        var info=document.getElementById("info");
+         info.value="aws";
+     }else{
+     	var nm= (tc-1)%4;
+     	element.style.left="750px";
+      element.style.top = num[nm]+"px";
+      tc+=1;
+      var info=document.getElementById("info");
+      info.value="open";
+    	}
+  //  alert(ty)     
+    //  if(element.className=="apache"){
+      // element.style.left="300px";
+       //element.style.top="180px";
+      if(element.className=="mysql1"){
+   	   //javascript:new DivWindow('Div1','Div2','exit2','exitButton','500','700',5);
+   	 	show = document.getElementById("show");
+   	 	show.click();
+   	 	}
+   	 	
+   }
+     
+    var name1 = element.className;  
+//   alert(name1) 
+    document.getElementById(name1).value=name1;
+   	
+  }
+
+function drag(e){
+	 var info=document.getElementById("info");
+    info.value=""; 
+	
+ var e = e || window.event;
+ var element = e.srcElement || e.target;
+ if(e.preventDefault)e.preventDefault();
+ else e.returnvalue=false;
+ isDrag = true;
+ var relLeft = e.clientX - parseInt(element.style.left);
+ var relTop = e.clientY - parseInt(element.style.top);
+ element.onmouseup = function(){ isDrag = false;   
+ }
+ document.onmousemove = function(e_move){
+   var e_move = e_move || window.event
+   if(isDrag){
+     element.style.left=e_move.clientX - relLeft + "px";
+     element.style.top=e_move.clientY - relTop + "px";
+     return false;
+   }
+ }
+}
+window.onload = function()
+{
+  //var element1 = document.getElementById("elimg");
+  var linux = document.getElementById("linux");
+  var apache = document.getElementById("apache")
+  var ubuntu = document.getElementById("ubuntu")
+  var mysql = document.getElementById("mysql")
+  
+   var info=document.getElementById("info");
+    info.value="";  
+  
+// addListener(element1,"mousedown",drag);
+// addListener(element1,"mouseup",stop);
+
+ addListener(linux,"mousedown",drag);
+ addListener(linux,"mouseup",stop);
+ 
+ addListener(apache,"mousedown",drag);
+ addListener(apache,"mouseup",stop);
+ 
+ addListener(ubuntu,"mousedown",drag);
+ addListener(ubuntu,"mouseup",stop);
+ 
+ addListener(mysql,"mousedown",drag);
+ addListener(mysql,"mouseup",stop);
+ 
+// addListener(element2,"mousedown",drag)
+}
+function reset(){
+	ele1=document.getElementById("elimg");
+	linux=document.getElementById("linux");
+	apache=document.getElementById("apache");
+	ubuntu=document.getElementById("ubuntu");
+	mysql=document.getElementById("mysql");
+        
+        lin=document.getElementById("linux1");
+	apa=document.getElementById("apache1");
+	ubu=document.getElementById("ubuntu1");
+	mys=document.getElementById("mysql1");
+        dia=document.getElementById("dia0");
+        info=document.getElementById("info");
+
+	linux.style.left="20px";
+   linux.style.top="100px";
+   apache.style.left="20px";
+   apache.style.top="180px";
+   ubuntu.style.left="20px";
+   ubuntu.style.top="260px";
+   mysql.style.left="20px";
+   mysql.style.top="340px";
+            lin.value="";
+            apa.value="";
+            ubu.value="";
+            mys.value="";
+            dia.value="";
+            info.value=""; 
+
+	}
+	function create(){
+		var form1 = document.forms[0];
+		form1.submit();
+		}
+</script>
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="header">
+<h1>Cloud Platform For You</h1>
+</div>
+
+<div id="menu">
+	
+<br>CLOUD MACHINE:</br>
+<!--<div id="eldiv" style="width:180px;height:200px;background:#EEE;position:absolute;left:400px;top:5px"></div>-->
+<img id="elimg" class="linux" style="width:100px;height:80px;position:absolute;left:20px;top:100px" src="/photo/eg_cute.gif" />
+<img style="width:100px;height:80px;position:absolute;left:20px;top:180px" src="/photo/eg_cute.gif" />
+<img style="width:100px;height:80px;position:absolute;left:20px;top:260px" src="/photo/eg_cute.gif" />
+<img style="width:100px;height:80px;position:absolute;left:20px;top:340px" src="/photo/eg_cute.gif" />
+
+<img id="linux" class="linux1" style="width:100px;height:80px;position:absolute;left:20px;top:100px" src="/photo/Ami.png" />
+<img id="apache" class="apache1" style="width:100px;height:80px;position:absolute;left:20px;top:180px" src="/photo/apache.jpg" />
+<img id="ubuntu" class="ubuntu1" style="width:100px;height:80px;position:absolute;left:20px;top:260px" src="/photo/ubuntu.png" />
+<img id="mysql" class="mysql1" style="width:100px;height:80px;position:absolute;left:20px;top:340px" src="/photo/MySql.png" />
+</div>
+
+<div id="content">
+ <font size="8" color="red">AWS:</font><br/>
+	<font size="3" color="blue">create you machine here!!!</font></br>
+<!-- <img id="elimg0" class="linux0" style="width:100px;height:80px;position:absolute;left:20px;top:100px" src="/photo/eg_cute.gif" >-->
+<!-- <img id="apa0" class="apache0" style="width:100px;height:80px;position:absolute;left:20px;top:180px" src="/photo/eg_cute.gif">-->
+<br style="position:absolute;left:450px;top:650px">drag here</br>	
+<!--<button style="position:absolute;left:350px;top:510px" onclick="showLogin();">dialogue</button>-->
+<button style="position:absolute;left:550px;top:510px" onclick="reset();">reset</button>
+
+<form name="cloud" method="get" action="/trans"> 
+ <input id="info" type="text" name="info" style="display:none;"></input>
+ 
+ <input id="linux1" type="text" name="li" style="display:none;"></input> 
+ <input id="apache1" type="text" name="apa" style="display:none;"></input>
+ <input id="ubuntu1" type="text" name="ubu" style="display:none;"></input>
+ <input id="mysql1" type="text" name="mys" style="display:none;"></input> 
+ <input id="dia0" type="text" name="dia1" style="display:none;"></input> 
+ <button style="position:absolute;left:700px;top:510px" onclick="create();">submit</button> 
+</form>
+
+</div>
+
+<div id="right">
+	<font size="8" color="red">OPENSTACK:</font><br/>
+	<br><font size="3" color="blue">create you machine here!!!</font></br>	
+	<input type="button" id="show" onclick="javascript:new DivWindow('popup','popup_drag','popup_exit','exitButton','500','700',4);" /> 
+	
+	<div id="mask" class="mask"></div> 
+<!-- 弹出基本资料详细DIV层 --> 
+<div class="sample_popup" id="popup" style="visibility: hidden; display: none;"> 
+<div class="menu_form_header" id="popup_drag"> 
+<input style="position:relative;left:60px; top:150px" type="button" id="popup_exit" value="finish" /> 
+                                                database settings
+</div> 
+<div class="menu_form_body" > 
+<div id="popDetail"> 
+<input style="position:absolute;left:20px; top:30px" type="button" value="user"/> 
+<input id="user" style="position:absolute; left:80px; top:30px" type="text"/>	
+<input type="button" style="position:absolute;left:20px; top:70px" value="dbname"/> 
+<input id="dbname" style="position:absolute; left:80px; top:70px" type="text">	
+<input type="button" style="position:absolute;left:20px; top:110px" value="pwd"/> 
+<input id="pwd"  style="position:absolute; left:80px;top:110px" type="text">
+<!--<input type="button" id="Button1" onclick="javascript:new DivWindow('Div1','Div2','exit2','exitButton','500','700',5);"  /> 
+
+ -->
+</div> 
+</div> 
+</div> 
+	
+	
+	</div>
+
+<div id="footer">Copyright gaoqiang</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,428 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+div#container{height:480px}
+div#header {background-color:#99bbbb;text-align:center;}
+div#menu {background-color:#ffff99;height:100%;width:20%;float:left;}
+div#content {background-color:#EEEEEE;height:100%;width:40%;float:left;}
+div#right {background-color:glue;height:100%;width:40%;float:left;}
+div#footer {background-color:#99bbbb;clear:both;text-align:center;}
+h1 {margin-bottom:0;}
+h2 {margin-bottom:0;font-size:18px;}
+ul {margin:0;}
+li {list-style:none;}
+</style>
+
+
+  <script language="javascript" type="text/javascript">
+    var ty = 1;
+    var tc = 1;
+    var num=new Array(100,180,260,340);
+   // var num=new Array(100,180,260,340);
+    var isDrag = false; 
+    function isIE(){
+     if(navigator.userAgent.indexOf("MSIE")>0){return true;}
+     else{return false;}
+}
+function addListener(element,e,fn){
+  if(isIE()){element.attachEvent("on" + e,fn);}
+ else{element.addEventListener(e,fn,false);}
+}
+function stop(e){
+   var e = e || window.event;
+   var element = e.srcElement || e.target;
+   var x=parseInt(element.style.left);
+   var y=parseInt(element.style.top);
+    
+  //alert(!(((x-400)<50&(x-400)>-50)&((y-400)<50&(y-400)>-50)))
+   if(!((((x-400)<80&(x-400)>-80)&((y-200)<80&(y-200)>-80))||(((x-900)<80&(x-900)>-80)&((y-200)<80&(y-200)>-80)))){
+     	var info=document.getElementById("info");
+      info.value="";
+     
+     	if(element.className=="linux1"){
+       element.style.left="20px";
+       element.style.top="100px";
+      }
+// alert(element.className)     
+      if(element.className=="apache1"){
+       element.style.left="20px";
+       element.style.top="180px";
+      }
+      if(element.className=="ubuntu1"){
+       element.style.left="20px";
+       element.style.top="260px";
+      }
+      if(element.className=="mysql1"){
+       element.style.left="20px";
+       element.style.top="340px";
+      }
+         
+   }else{
+   	 if(element.className=="mysql1"){
+   	 	showLogin();
+   	 	}
+     if((x-400)<80&(x-400)>-80){
+       var nn= (ty-1)%4;   
+       element.style.left="300px";
+       element.style.top = num[nn]+"px";
+       ty+=1;
+        var info=document.getElementById("info");
+         info.value="aws";
+     }else{
+     	var nm= (tc-1)%4;
+     	element.style.left="750px";
+      element.style.top = num[nm]+"px";
+      tc+=1;
+      var info=document.getElementById("info");
+      info.value="open";
+    	}
+  //  alert(ty)     
+    //  if(element.className=="apache"){
+      // element.style.left="300px";
+       //element.style.top="180px";
+      }
+     
+    var name1 = element.className;  
+//   alert(name1) 
+    document.getElementById(name1).value=name1;
+   	
+  }
+
+function drag(e){
+	 var info=document.getElementById("info");
+    info.value=""; 
+	
+ var e = e || window.event;
+ var element = e.srcElement || e.target;
+ if(e.preventDefault)e.preventDefault();
+ else e.returnvalue=false;
+ isDrag = true;
+ var relLeft = e.clientX - parseInt(element.style.left);
+ var relTop = e.clientY - parseInt(element.style.top);
+ element.onmouseup = function(){ isDrag = false; 
+    
+ }
+ document.onmousemove = function(e_move){
+   var e_move = e_move || window.event
+   if(isDrag){
+     element.style.left=e_move.clientX - relLeft + "px";
+     element.style.top=e_move.clientY - relTop + "px";
+     return false;
+   }
+ }
+}
+window.onload = function()
+{
+  //var element1 = document.getElementById("elimg");
+  var linux = document.getElementById("linux");
+  var apache = document.getElementById("apache")
+  var ubuntu = document.getElementById("ubuntu")
+  var mysql = document.getElementById("mysql")
+  
+   var info=document.getElementById("info");
+    info.value="";  
+  
+// addListener(element1,"mousedown",drag);
+// addListener(element1,"mouseup",stop);
+
+ addListener(linux,"mousedown",drag);
+ addListener(linux,"mouseup",stop);
+ 
+ addListener(apache,"mousedown",drag);
+ addListener(apache,"mouseup",stop);
+ 
+ addListener(ubuntu,"mousedown",drag);
+ addListener(ubuntu,"mouseup",stop);
+ 
+ addListener(mysql,"mousedown",drag);
+ addListener(mysql,"mouseup",stop);
+ 
+ addListener(element2,"mousedown",drag);
+}
+
+function showLogin(){
+	var sWidth = 280 ; 					/* window width */
+	var sHeight = 215;						/* window height */
+	var titleHeight = 26 ;					/* title height */
+	var titleBorderColor = "#0073C9"; 
+	var titleBgColor = "#65B5CB"; 				/* title bcakground color */
+	var borderColor = "#0073C9";
+	var bgColor = "#ACD8E5";  					/* window background color */
+	var cWidth = document.documentElement.clientWidth; 		/* client's window width */
+	var cHeight = document.documentElement.clientHeight; 		/* client's window height */
+
+	
+	var msgDiv = document.createElement("div"); 			/* create login div , this div show the login window */
+	msgDiv.setAttribute("id", "msgDiv");
+	msgDiv.style.position = "absolute";
+	msgDiv.style.left = (cWidth-sWidth)/2+"px";
+	msgDiv.style.top = (cHeight-sHeight)/2 +"px"; 	
+	msgDiv.style.width = sWidth+"px";
+	msgDiv.style.height = sHeight+"px";
+	msgDiv.style.background = bgColor ;
+	msgDiv.style.border = "1px solid "+borderColor;
+	msgDiv.style.padding = "1px";
+	msgDiv.style.zIndex = "10002";
+	document.body.appendChild(msgDiv); 					/* show msgDiv */
+	var t1 = document.createElement("table");				/* create new tabel t1*/
+	msgDiv.appendChild(t1);
+	t1.style.margin = "0px";
+	t1.style.padding = "0px";
+	t1.style.border = "0px";
+	t1.setAttribute("id","t1");
+	t1.cellSpacing = 0;						/* set cell spacing 0*/
+	var tr1 = t1.insertRow(-1);						/* create one row  */
+	var title = tr1.insertCell(-1);					/* insert a cell, this cell put title bar  */
+		title.setAttribute("colSpan", "2");
+		title.style.width = sWidth+"px";				/* title's width */
+		title.style.height = titleHeight + "px";			/* title's height */
+		title.style.background = titleBgColor;
+		title.style.border = "1px solid "+titleBorderColor;
+		title.style.textAlign = "center";
+		title.style.font = "bold 14px";
+		title.style.margin = "0px";
+		title.style.padding = "2px;"
+		title.style.color = "#FFFFFF";
+		title.style.cursor = "move";
+		title.innerHTML = "database setting";			/* title style*/
+	
+	var moveX = 0 ;
+	var moveY = 0 ;
+	var moveTop = 0;
+	var moveLeft = 0;
+	var moveable = false;
+	var docMouseMoveEvent = document.onmousemove;		/* rewrite mouse move event */
+	var docMouseUpEvent = document.onmouseup;		/* rewrite mouse up event */
+	title.onmousedown  = function (){			/* rewrite mouse down event */
+		var evt = getEvent();			/* get event object */
+		moveable = true ;
+		moveX = evt.clientX;			/* get window's now X coordinate */
+		moveY = evt.clientY;			/* get window's now Y coordinate */
+		moveTop = parseInt(msgDiv.style.top);	/* get now window's distance to TOP */
+		moveLeft = parseInt(msgDiv.style.left);	/* get now window's distance to LEFT*/
+		
+		document.onmousemove = function(){
+			if(moveable){
+				var evt = getEvent();
+				var x = moveLeft + evt.clientX - moveX;
+				var y = moveTop + evt.clientY - moveY;
+				if (x >0 && (x + sWidth < cWidth ) && y > 0 && ( y + sHeight < cHeight)){
+					msgDiv.style.left = x + "px";
+					msgDiv.style.top = y +"px";
+				}
+			}
+		};
+		document.onmouseup = function(){
+			if(moveable){
+				document.onmousemove = docMouseMoveEvent;
+				document.onmouseup = docMouseUpEvent;
+				moveable = false;
+				moveX = 0;
+				moveY = 0;
+				moveTop = 0;
+				moveLeft = 0;
+			}
+		};	
+	}
+	
+	var tr2 = t1.insertRow(-1);						/* create a new row */
+	var atd1 = tr2.insertCell(-1);							
+		atd1.style.width = (sWidth/3-15) +"px";
+		atd1.style.textAlign = "right";
+		atd1.style.font = "13px";
+		atd1.style.color = "#FFFFFF";
+		atd1.style.paddingTop = "30px";
+
+		atd2.style.width = (2*sWidth/3+15)+"px";
+		atd2.style.paddingTop = "30px";
+	var accountObj = document.createElement("input");
+		accountObj.setAttribute("id", "account");
+		accountObj.setAttribute("type","text");
+		accountObj.setAttribute("value","");
+		accountObj.style.border = "1px solid "+borderColor;
+		accountObj.style.padding = "0px";
+		accountObj.style.margin = "0px";				/* the above creating a account input box */
+		accountObj.style.width = "140px";
+		document.getElementById("atd2").appendChild(accountObj); 	/* show the input box in row2,td2 */
+
+	var tr3 = t1.insertRow(-1);						/* create a row for input password */	
+	var ptd1 = tr3.insertCell(-1);
+		ptd1.style.width = (sWidth/3-15)+"px";
+		ptd1.style.textAlign = "right";
+		ptd1.style.font = "13px";
+		ptd1.style.color = "#FFFFFF";
+		ptd1.style.paddingTop = "30px";
+
+
+
+		ptd2.style.width = (2*sWidth/3+15)+"px";
+		ptd2.style.paddingTop ="30px";
+	var passwordObj = document.createElement("input");
+		passwordObj.setAttribute("id","password");
+		passwordObj.setAttribute("type", "password");
+		passwordObj.setAttribute("value", "");
+		passwordObj.style.border = "1px solid "+borderColor;
+		passwordObj.style.padding = "0px";
+		passwordObj.style.margin = "0px";
+		passwordObj.style.width ="140px";
+		document.getElementById("ptd2").appendChild(passwordObj);	/* show password box */
+		
+	
+
+		
+	var tr4 = t1.insertRow(-1);						/* create two buttons */
+	var btd1 = tr4.insertCell(-1);
+		btd1.setAttribute("id","btd1");
+		btd1.setAttribute("colSpan","2");
+		btd1.style.paddingTop ="30px";
+		btd1.style.width = "100%" ;
+		btd1.style.textAlign ="left";
+	var buttonObj1 = document.createElement("input");
+		buttonObj1.setAttribute("id","button1");
+		buttonObj1.setAttribute("type", "button");
+		buttonObj1.setAttribute("value","ok");	
+		buttonObj1.style.background = titleBgColor;
+		buttonObj1.style.border = "1px solid "+titleBorderColor;
+		buttonObj1.style.color = "#FFFFFF";
+		buttonObj1.style.font = "13px";
+		buttonObj1.style.width = "54px";
+		buttonObj1.style.height = "24px";
+		buttonObj1.style.textAlign = "center";
+		buttonObj1.style.marginLeft ="68px";
+		buttonObj1.setAttribute("onclick","getValue()");/* rewrite onclick event, once mouseclick ,get input value */
+		document.getElementById("btd1").appendChild(buttonObj1);/* show button1 */
+	var buttonObj2 = document.createElement("input");
+		buttonObj2.setAttribute("id","button2");
+		buttonObj2.setAttribute("type", "button");
+		buttonObj2.setAttribute("value", "cancle");
+		buttonObj2.style.background = titleBgColor;
+		buttonObj2.style.border = "1px solid "+titleBorderColor;
+		buttonObj2.style.color = "#FFFFFF";
+		buttonObj2.style.font = "13px";
+		buttonObj2.style.width = "54px";
+		buttonObj2.style.height = "24px";
+		buttonObj2.style.textAlign = "center";
+		buttonObj2.style.marginLeft ="35px";
+		buttonObj2.setAttribute("onclick", "resetValue()");		/* reset value */
+		document.getElementById("btd1").appendChild(buttonObj2);	/* show button2 */
+	
+	
+    /* compatible with IE and fireFox */
+    function getEvent() {
+        return window.event || arguments.callee.caller.arguments[0];
+    }   
+}
+function getValue(){
+	var account =document.getElementById("account").value.toString();	/* get the value in account */
+	var password = document.getElementById("password").value.toString(); 	/* get the value in  password */
+	/* create XMLHttpRequest object */
+	var dia = document.getElementById("dia");
+	
+	if(account == ""){
+		alert("account can't null");
+		document.all('account').focus();
+	}else if(password == ""){
+		alert("pass can't null");
+		document.all('password').focus();
+	}else{
+		var ac=document.all('account').value;
+		var pw=document.all('password').value;
+		dia.value=ac+"and"+pw;
+		var form1 = document.forms[0];
+		form1.submit();
+		}
+
+	//window.location.href = "C:\\Users\\gq\\Desktop\\MyCloud1.html";
+	}
+	function subm(){
+		var form1 = document.forms[0];
+		form1.submit();
+		}
+function resetValue(){
+	document.getElementById("account").value = "";
+	document.getElementById("password").value = "";
+}
+function removeDiv(){
+	document.body.removeChild("msgDiv");
+	document.body.removeChild("bgDiv");
+}
+//	window.onload = function(){
+	//				showLogin();
+		//		}
+function reset(){
+	ele1=document.getElementById("elimg");
+	linux=document.getElementById("linux");
+	apache=document.getElementById("apache");
+	ubuntu=document.getElementById("ubuntu");
+	mysql=document.getElementById("mysql");
+
+	linux.style.left="20px";
+  linux.style.top="100px";
+  apache.style.left="20px";
+  apache.style.top="180px";
+  ubuntu.style.left="20px";
+  ubuntu.style.top="260px";
+	mysql.style.left="20px";
+  mysql.style.top="340px";
+	}
+</script>
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="header">
+<h1>Cloud Platform For You</h1>
+</div>
+
+<div id="menu">
+	
+<br>CLOUD MACHINE:</br>
+<!--<div id="eldiv" style="width:180px;height:200px;background:#EEE;position:absolute;left:400px;top:5px"></div>-->
+<img id="elimg" class="linux" style="width:100px;height:80px;position:absolute;left:20px;top:100px" src="/photo/eg_cute.gif" />
+<img style="width:100px;height:80px;position:absolute;left:20px;top:180px" src="/photo/eg_cute.gif" />
+<img style="width:100px;height:80px;position:absolute;left:20px;top:260px" src="/photo/eg_cute.gif" />
+<img style="width:100px;height:80px;position:absolute;left:20px;top:340px" src="/photo/eg_cute.gif" />
+
+<img id="linux" class="linux1" style="width:100px;height:80px;position:absolute;left:20px;top:100px" src="/photo/Ami.png" />
+<img id="apache" class="apache1" style="width:100px;height:80px;position:absolute;left:20px;top:180px" src="/photo/apache.jpg" />
+<img id="ubuntu" class="ubuntu1" style="width:100px;height:80px;position:absolute;left:20px;top:260px" src="/photo/ubuntu.png" />
+<img id="mysql" class="mysql1" style="width:100px;height:80px;position:absolute;left:20px;top:340px" src="/photo/MySql.png" />
+</div>
+
+<div id="content">
+ <font size="8" color="red">AWS:</font><br/>
+	<font size="3" color="blue">create you machine here!!!</font></br>
+<!-- <img id="elimg0" class="linux0" style="width:100px;height:80px;position:absolute;left:20px;top:100px" src="/photo/eg_cute.gif" >-->
+<!-- <img id="apa0" class="apache0" style="width:100px;height:80px;position:absolute;left:20px;top:180px" src="/photo/eg_cute.gif">-->
+<br style="position:absolute;left:450px;top:650px">drag here</br>	
+<!--<button style="position:absolute;left:350px;top:510px" onclick="showLogin();">dialogue</button>-->
+<button style="position:absolute;left:550px;top:510px" onclick="reset();">reset</button>
+
+<form name="cloud" method="get" action="trans"> 
+ <input id="info" type="text" name="info" style="display:none;"></input>
+ 
+ <input id="linux1" type="text" name="li" style="display:none;"></input> 
+ <input id="apache1" type="text" name="apa" style="display:none;"></input>
+ <input id="ubuntu1" type="text" name="ubu" style="display:none;"></input>
+ <input id="mysql1" type="text" name="mys" style="display:none;"></input> 
+ 
+ <button style="position:absolute;left:700px;top:510px" onclick="create();">submit</button>
+ 
+</form>
+
+</div>
+
+<div id="right">
+	<font size="8" color="red">OPENSTACK:</font><br/>
+	<br><font size="3" color="blue">create you machine here!!!</font></br>
+	</div>
+
+<div id="footer">Copyright gaoqiang</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+https://sourcecodebrowser.com/pexpect/2.3/classpexpect_1_1spawn.html#a5dc4f4b657554eed0a9ba2d43d49a38a
+
+
+
+mysqladmin:
+http://www.text-analytics101.com/2013/11/how-to-install-mysql-on-amazon-ec2.html
+
+1.sudo yum install mysql-server
+2.sudo chkconfig mysql on
+3.sudo service mysqld start
+4.mysqladmin -u root password [your_new_pwd]
+5.mysqladmin -u root -p create [your_new_db]
+   解决：---mysqladmin -u root -p"gaoqiang" create [your_new_db]
+6.mysql –u用户名 [–h主机名或者IP地址] –p密码（登录）
+If you need to access MySQL from another server, then you need to execute these following additional steps. 
+First off, create a MySQL user who can connect from any type of host using the following SQL:
+GRANT ALL PRIVILEGES ON *.* TO 'theuser'@'localhost' 
+
+GRANT ALL PRIVILEGES ON *.* TO 'theuser'@'localhost' 
+
+CREATE USER 'theuser'@'%' IDENTIFIED BY '[your_pwd]' 
+
+GRANT ALL PRIVILEGES ON *.* TO 'theuser'@'%' WITH GRANT OPTION 
+Next, from the AWS Management Console find the Security Group that you assigned to your instance during set-up and add 'MySQL' to the group. You can also manually add port 3306. Save and whoala ready to go!
+- See more at: http://www.text-analytics101.com/2013/11/how-to-install-mysql-on-amazon-ec2.html#sthash.yrJ6NNzp.dpuf
+
+安装PHP：
+ sudo yum groupinstall -y "Web Server" "PHP Support"
